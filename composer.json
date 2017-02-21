@@ -1,0 +1,19 @@
+{
+  "name": "cehajicm/openexchangerates-php-client",
+  "description": "OpenExchangeRates API PHP client",
+  "license": "MIT",
+  "keywords": ["openexchangerates"],
+  "authors": [
+    {
+      "name": "Mirza Cehajic",
+      "email": "mirza.cehajic@gmail.com"
+    }
+  ],
+  "require": {},
+  "require-dev": {},
+  "autoload": {
+    "psr-4": {
+      "cehajicm\\openexchangerates\\": "src/"
+    }
+  }
+}
