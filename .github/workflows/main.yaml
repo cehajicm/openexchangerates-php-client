@@ -1,0 +1,38 @@
+on:
+  push:
+  pull_request:
+    types: [opened]
+name: SonarQube Scan
+jobs:
+  sq_scan_job:
+    runs-on: ubuntu-latest
+    name: SonarQube check
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Setup sonarqube
+        uses: warchant/setup-sonar-scanner@v1
+      - name: Run sonarqube
+        env:
+          # to get access to secrets.SONAR_TOKEN, provide GITHUB_TOKEN
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run:
+          if [ "$GITHUB_EVENT_NAME" = "push" ]; then
+            echo "$GITHUB_EVENT_NAME" &&
+            sonar-scanner
+              -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+              -Dsonar.host.url=http://mc-dran.localhost.run
+              -Dsonar.scm.provider=git
+              -Dsonar.branch.name=${GITHUB_REF#refs/heads/};
+          elif [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+            echo "$GITHUB_EVENT_NAME" &&
+            sonar-scanner
+              -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+              -Dsonar.host.url=http://mc-dran.localhost.run
+              -Dsonar.scm.provider=git
+              -Dsonar.pullrequest.branch=$(jq -r ".pull_request.head.ref" ${GITHUB_EVENT_PATH})
+              -Dsonar.pullrequest.key=$(jq -r ".pull_request.number" ${GITHUB_EVENT_PATH});
+          fi
