@@ -1,7 +1,9 @@
 <?php
 declare(strict_types = 1);
 
-namespace cehajicm\openexchangerates;
+namespace Cehajicm\openexchangerates;
+
+use DateTime;
 
 use DateTime;
 
