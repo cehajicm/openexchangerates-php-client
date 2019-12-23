@@ -1,0 +1,11 @@
+- name: Setup sonarqube
+  uses: warchant/setup-sonar-scanner@v1
+- name: Run sonarqube
+  env:
+    # to get access to secrets.SONAR_TOKEN, provide GITHUB_TOKEN
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  run: sonar-scanner
+       -Dsonar.login=ab7e0335a1295cd545332ca70a4c2396dc2242e6
+       -Dsonar.host.url=http://localhost:9000
+       -Dsonar.projectKey=openexchangerates-php-client
+       -Dsonar.branch.name=${{GITHUB_REF}}
