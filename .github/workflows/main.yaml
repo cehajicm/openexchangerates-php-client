@@ -14,16 +14,16 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-     - name: Extract context
-       if: matrix.os == 'ubuntu-latest'
-       id: context
-       shell: bash
-       run: |
-         CURRENT_BRANCH="${GITHUB_REF#refs/heads/}"
-         [[ "$CURRENT_BRANCH" = "dev" ]] && PARENT_BRANCH="master" || PARENT_BRANCH="dev"
-         git checkout "${CURRENT_BRANCH}"
-         echo "##[set-output name=current_branch;]${CURRENT_BRANCH}"
-         echo "##[set-output name=parent_branch;]${PARENT_BRANCH}"
+      - name: Extract context
+        if: matrix.os == 'ubuntu-latest'
+        id: context
+        shell: bash
+        run: |
+          CURRENT_BRANCH="${GITHUB_REF#refs/heads/}"
+          [[ "$CURRENT_BRANCH" = "dev" ]] && PARENT_BRANCH="master" || PARENT_BRANCH="dev"
+          git checkout "${CURRENT_BRANCH}"
+          echo "##[set-output name=current_branch;]${CURRENT_BRANCH}"
+          echo "##[set-output name=parent_branch;]${PARENT_BRANCH}"
       - name: Setup sonarqube
         uses: warchant/setup-sonar-scanner@v1
       - name: Run sonarqube
