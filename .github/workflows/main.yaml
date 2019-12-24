@@ -22,4 +22,4 @@ jobs:
           -Dsonar.host.url=http://issue.pagekite.me
           -Dsonar.projectKey=oxc
           -Dsonar.scm.enabled=true
-          -Dsonar.scm.provider=tfvc
+          -Dsonar.scm.provider=git
