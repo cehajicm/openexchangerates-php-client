@@ -11,9 +11,9 @@ jobs:
     name: SonarQube check
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
         with:
-          - fetch-depth: 0
+          fetch-depth: 0
       - name: Setup sonarqube
         uses: warchant/setup-sonar-scanner@v1
       - name: Run sonarqube
