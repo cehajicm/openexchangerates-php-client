@@ -12,14 +12,19 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-        run: |
-          CURRENT_BRANCH="${GITHUB_REF#refs/heads/}"
-          [[ "$CURRENT_BRANCH" = "dev" ]] && PARENT_BRANCH="master" || PARENT_BRANCH="dev"
-          git checkout "${CURRENT_BRANCH}"
-          echo "##[set-output name=current_branch;]${CURRENT_BRANCH}"
-          echo "##[set-output name=parent_branch;]${PARENT_BRANCH}"
         with:
           fetch-depth: 0
+       - name: Extract context
+       if: matrix.os == 'ubuntu-latest'
+       id: context
+       shell: bash
+       run: |
+         CURRENT_BRANCH="${GITHUB_REF#refs/heads/}"
+         [[ "$CURRENT_BRANCH" = "dev" ]] && PARENT_BRANCH="master" || PARENT_BRANCH="dev"
+         git checkout "${CURRENT_BRANCH}"
+         echo "##[set-output name=current_branch;]${CURRENT_BRANCH}"
+         echo "##[set-output name=parent_branch;]${PARENT_BRANCH}"
+         echo "##[set-output name=version;]$(jq -r .version package.json)"
       - name: Setup sonarqube
         uses: warchant/setup-sonar-scanner@v1
       - name: Run sonarqube
@@ -32,5 +37,5 @@ jobs:
           -Dsonar.sources=.
           -Dsonar.host.url=http://93.180.118.102:9000
           -Dsonar.scm.provider=git
-          -Dsonar.branch.name=${{ CURRENT_BRANCH }}
-          -Dsonar.branch.target=${{ PARENT_BRANCH }}
+          -Dsonar.branch.name=${{ steps.context.outputs.current_branch }}
+          -Dsonar.branch.target=${{ steps.context.outputs.parent_branch }}
