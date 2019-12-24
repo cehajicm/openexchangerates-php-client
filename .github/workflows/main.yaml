@@ -18,6 +18,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: sonar-scanner
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-          -Dsonar.sources=. \
-          -Dsonar.host.url=https://issue.pagekite.me//
+          -Dsonar.sources=.
+          -Dsonar.host.url=https://issue.pagekite.me
           -Dsonar.projectKey=oxc
