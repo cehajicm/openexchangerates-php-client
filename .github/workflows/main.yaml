@@ -14,7 +14,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-       - name: Extract context
+     - name: Extract context
        if: matrix.os == 'ubuntu-latest'
        id: context
        shell: bash
