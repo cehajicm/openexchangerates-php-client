@@ -26,3 +26,5 @@ jobs:
           -Dsonar.sources=.
           -Dsonar.host.url=http://93.180.118.102:9000
           -Dsonar.scm.provider=git
+          -Dsonar.branch.name=${{ CURRENT_BRANCH }}
+          -Dsonar.branch.target=${{ PARENT_BRANCH }}
