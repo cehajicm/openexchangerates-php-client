@@ -20,7 +20,7 @@ jobs:
         env:
           # to get access to secrets.SONAR_TOKEN, provide GITHUB_TOKEN
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: sonar-scanner -X
+        run: sonar-scanner
           -Dsonar.projectKey=oxc
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
           -Dsonar.sources=.
