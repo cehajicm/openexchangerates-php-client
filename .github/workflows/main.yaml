@@ -12,6 +12,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        run: |
+          CURRENT_BRANCH="${GITHUB_REF#refs/heads/}"
+          [[ "$CURRENT_BRANCH" = "dev" ]] && PARENT_BRANCH="master" || PARENT_BRANCH="dev"
+          git checkout "${CURRENT_BRANCH}"
+          echo "##[set-output name=current_branch;]${CURRENT_BRANCH}"
+          echo "##[set-output name=parent_branch;]${PARENT_BRANCH}"
         with:
           fetch-depth: 0
       - name: Setup sonarqube
