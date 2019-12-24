@@ -20,4 +20,4 @@ jobs:
           -Dsonar.projectKey=oxc
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
           -Dsonar.sources=.
-          -Dsonar.host.url=http://issue.pagekite.me
+          -Dsonar.host.url=http://93.180.118.102:9000
