@@ -8,7 +8,7 @@ on:
 jobs:
   hello_world_job:
     runs-on: ubuntu-latest
-    name: A job to say hello
+    name: SonarQube check
     steps:
       - name: Setup sonarqube
         uses: warchant/setup-sonar-scanner@v1
@@ -16,7 +16,7 @@ jobs:
         env:
           # to get access to secrets.SONAR_TOKEN, provide GITHUB_TOKEN
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: sonar-scanner
+        run: echo GITHUB_TOKEN && sonar-scanner
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
           -Dsonar.sources=.
           -Dsonar.host.url=https://issue.pagekite.me
