@@ -17,9 +17,7 @@ jobs:
           # to get access to secrets.SONAR_TOKEN, provide GITHUB_TOKEN
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: sonar-scanner
+          -Dsonar.projectKey=oxc
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
           -Dsonar.sources=.
           -Dsonar.host.url=http://issue.pagekite.me
-          -Dsonar.projectKey=oxc
-          -Dsonar.scm.enabled=true
-          -Dsonar.scm.provider=git
