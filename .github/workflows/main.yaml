@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     name: SonarQube check
     steps:
+      - uses: actions/checkout@v2
       - name: Setup sonarqube
         uses: warchant/setup-sonar-scanner@v1
       - name: Run sonarqube
