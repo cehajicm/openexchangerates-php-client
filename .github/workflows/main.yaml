@@ -48,4 +48,4 @@ jobs:
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
           -Dsonar.host.url=http://mc-h6yx.localhost.run
           -Dsonar.scm.provider=git
-          -Dsonar.branch.name=${{ steps.context.outputs.current_branch }}
+          -Dsonar.branch.name=${GITHUB_EVENT_PATH#pullrequest/head/ref}
