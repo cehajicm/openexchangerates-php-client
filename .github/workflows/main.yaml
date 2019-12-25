@@ -49,6 +49,5 @@ jobs:
           -Dsonar.host.url=http://mc-h6yx.localhost.run
           -Dsonar.scm.provider=git
           -Dsonar.branch.name="${GITHUB_REF#refs/heads/}"
-          -Dsonar.pullrequest.branch="${GITHUB_EVENT_PATH#pullrequest/head/ref/
-          "}"
+          -Dsonar.pullrequest.branch="${GITHUB_EVENT_PATH#pullrequest/head/ref/}"
           -Dsonar.pullrequest.key="${GITHUB_EVENT_PATH#pullrequest/number/}"
