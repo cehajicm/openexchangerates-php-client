@@ -33,7 +33,7 @@ jobs:
           -Dsonar.projectKey=oxc
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
           -Dsonar.sources=.
-          -Dsonar.host.url=http://issue.pagekite.me
+          -Dsonar.host.url=http://mc-h6yx.localhost.run
           -Dsonar.scm.provider=git
           -Dsonar.branch.name=${{ steps.context.outputs.current_branch }}
           -Dsonar.branch.target=${{ steps.context.outputs.parent_branch }}
