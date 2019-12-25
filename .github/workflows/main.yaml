@@ -38,10 +38,6 @@ jobs:
                 echo "##[set-output name=pr_key;]${PR_KEY}"
             fi
           fi
-
-
-          echo "##[set-output name=current_branch;]${CURRENT_BRANCH}"
-          echo "##[set-output name=parent_branch;]${PARENT_BRANCH}"
       - name: Setup sonarqube
         uses: warchant/setup-sonar-scanner@v1
       - name: Run sonarqube
@@ -50,17 +46,12 @@ jobs:
           # to get access to secrets.SONAR_TOKEN, provide GITHUB_TOKEN
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo ${{ steps.context.outputs.current_branch }}
-          echo ${{ steps.context.outputs.cb }}
-          echo ${{ steps.context.outputs.pr_branch }}
-          echo ${{ steps.context.outputs.pr_key }}
-#        sonar-scanner
-#          -Dsonar.projectKey=oxc
-#          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-#          -Dsonar.sources=.
-#          -Dsonar.host.url=http://mc-h6yx.localhost.run
-#          -Dsonar.scm.provider=git
-#          -Dsonar.branch.name=${{ steps.context.outputs.current_branch }}
-#          -Dsonar.branch.target=${{ steps.context.outputs.parent_branch }}
-#          -Dsonar.pullrequest.branch=${{ steps.context.outputs.current_branch }}
-#          -Dsonar.pullrequest.base=${{ steps.context.outputs.parent_branch }}
+        sonar-scanner
+          -Dsonar.projectKey=oxc
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+          -Dsonar.sources=.
+          -Dsonar.host.url=http://mc-h6yx.localhost.run
+          -Dsonar.scm.provider=git
+          -Dsonar.branch.name=${{ steps.context.outputs.cb }}
+#          -Dsonar.pullrequest.branch=${{ steps.context.outputs.pr_branch }}
+#          -Dsonar.pullrequest.key=${{ steps.context.outputs.pr_key}}
