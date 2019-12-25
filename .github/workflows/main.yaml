@@ -5,6 +5,7 @@ on:
   pull_request:
     branches:
       - master
+name: SonarQube Scan
 jobs:
   sq_scan_job:
     runs-on: ubuntu-latest
@@ -26,6 +27,7 @@ jobs:
       - name: Setup sonarqube
         uses: warchant/setup-sonar-scanner@v1
       - name: Run sonarqube
+        shell: bash
         env:
           # to get access to secrets.SONAR_TOKEN, provide GITHUB_TOKEN
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
