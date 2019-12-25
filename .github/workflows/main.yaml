@@ -19,9 +19,27 @@ jobs:
         id: context
         shell: bash
         run: |
-          CURRENT_BRANCH="${GITHUB_REF#refs/heads/}"
-          [[ "$CURRENT_BRANCH" = "dev" ]] && PARENT_BRANCH="master" || PARENT_BRANCH="dev"
-          git checkout "${CURRENT_BRANCH}"
+          if [[ "${GITHUB_EVENT_NAME}" == "pushed" ]]; then
+            EVENT_ACTION=$(jq -r ".action" "${GITHUB_EVENT_PATH}")
+              if [[ "${EVENT_ACTION}" = "opened" ]]; then
+          		CURRENT_BRANCH = $(jq -r ".pullrequest.head.ref" "${GITHUB_EVENT_PATH}")
+          		CB = ${GITHUB_EVENT_PATH#pullrequest/head/ref}
+                echo "##[set-output name=current_branch;]${CURRENT_BRANCH}"
+                echo "##[set-output name=cb;]${CB}"
+            fi
+          fi
+
+          if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
+            EVENT_ACTION=$(jq -r ".action" "${GITHUB_EVENT_PATH}")
+              if [[ "${EVENT_ACTION}" = "opened" ]]; then
+          		PR_BRANCH = $(jq -r ".pullrequest.head.ref" "${GITHUB_EVENT_PATH}")
+          		PR_KEY = $(jq -r ".pullrequest.number" "${GITHUB_EVENT_PATH}")
+                echo "##[set-output name=pr_branch;]${PR_BRANCH}"
+                echo "##[set-output name=pr_key;]${PR_KEY}"
+            fi
+          fi
+
+
           echo "##[set-output name=current_branch;]${CURRENT_BRANCH}"
           echo "##[set-output name=parent_branch;]${PARENT_BRANCH}"
       - name: Setup sonarqube
@@ -31,13 +49,18 @@ jobs:
         env:
           # to get access to secrets.SONAR_TOKEN, provide GITHUB_TOKEN
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: sonar-scanner
-          -Dsonar.projectKey=oxc
-          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-          -Dsonar.sources=.
-          -Dsonar.host.url=http://mc-h6yx.localhost.run
-          -Dsonar.scm.provider=git
-          -Dsonar.branch.name=${{ steps.context.outputs.current_branch }}
-          -Dsonar.branch.target=${{ steps.context.outputs.parent_branch }}
-          -Dsonar.pullrequest.branch=${{ steps.context.outputs.current_branch }}
-          -Dsonar.pullrequest.base=${{ steps.context.outputs.parent_branch }}
+        run: |
+          echo ${{ steps.context.outputs.current_branch }}
+          echo ${{ steps.context.outputs.cb }}
+          echo ${{ steps.context.outputs.pr_branch }}
+          echo ${{ steps.context.outputs.pr_key }}
+#        sonar-scanner
+#          -Dsonar.projectKey=oxc
+#          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+#          -Dsonar.sources=.
+#          -Dsonar.host.url=http://mc-h6yx.localhost.run
+#          -Dsonar.scm.provider=git
+#          -Dsonar.branch.name=${{ steps.context.outputs.current_branch }}
+#          -Dsonar.branch.target=${{ steps.context.outputs.parent_branch }}
+#          -Dsonar.pullrequest.branch=${{ steps.context.outputs.current_branch }}
+#          -Dsonar.pullrequest.base=${{ steps.context.outputs.parent_branch }}
