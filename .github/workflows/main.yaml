@@ -5,16 +5,37 @@ on:
   pull_request:
     branches:
       - master
-name: Main Workflow
 jobs:
-  sonarCloudTrigger:
-    name: SonarCloud Trigger
+  sq_scan_job:
     runs-on: ubuntu-latest
+    name: SonarQube check
     steps:
-      - uses: actions/checkout@master
-      - name: SonarCloud Scan
-        uses: sonarsource/sonarcloud-github-action@master
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Extract context
+        id: context
+        shell: bash
+        run: |
+          CURRENT_BRANCH="${GITHUB_REF#refs/heads/}"
+          [[ "$CURRENT_BRANCH" = "dev" ]] && PARENT_BRANCH="master" || PARENT_BRANCH="dev"
+          git checkout "${CURRENT_BRANCH}"
+          echo "##[set-output name=current_branch;]${CURRENT_BRANCH}"
+          echo "##[set-output name=parent_branch;]${PARENT_BRANCH}"
+      - name: Setup sonarqube
+        uses: warchant/setup-sonar-scanner@v1
+      - name: Run sonarqube
         env:
+          # to get access to secrets.SONAR_TOKEN, provide GITHUB_TOKEN
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONARCLOUD_URL: http://mc-h6yx.localhost.run
+        run: sonar-scanner
+          -Dsonar.projectKey=oxc
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+          -Dsonar.sources=.
+          -Dsonar.host.url=http://mc-h6yx.localhost.run
+          -Dsonar.scm.provider=git
+          -Dsonar.branch.name=${{ steps.context.outputs.current_branch }}
+          -Dsonar.branch.target=${{ steps.context.outputs.parent_branch }}
+          -Dsonar.pullrequest.branch=${{ steps.context.outputs.current_branch }}
+          -Dsonar.pullrequest.base=${{ steps.context.outputs.parent_branch }}
