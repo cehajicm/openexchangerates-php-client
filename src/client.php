@@ -4,8 +4,7 @@ declare(strict_types = 1);
 namespace Cehajicm\openexchangerates;
 
 use DateTime;
-
-use DateTime;
+use InvalidArgumentException;
 
 /**
  * PHP client for the OpenExchangeRates API.
@@ -20,6 +19,8 @@ class client
      * API base URL.
      */
     const ENDPOINT = 'https://openexchangerates.org/api';
+    const DATE_FORMAT = 'Y-m-d';
+    const PRETTY_PRINT = 'prettyprint';
 
     /**
      * API endpoint parameters.
@@ -65,7 +66,7 @@ class client
      */
     public function symbols(array $symbols): client
     {
-        $this->symbols = implode(",", $symbols);
+        $this->symbols = implode(',', $symbols);
         return $this;
     }
 
@@ -168,7 +169,7 @@ class client
      * @param string $endpoint
      * @param array $parameters
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      *
      * @return array
      */
@@ -184,7 +185,7 @@ class client
         $response = json_decode($json, true);
 
         if (array_key_exists('error', $response)) {
-            throw new \InvalidArgumentException($response['status'] . ' - ' . $response['description']);
+            throw new InvalidArgumentException($response['status'] . ' - ' . $response['description']);
         }
 
         return $response;
@@ -198,9 +199,9 @@ class client
     public function historical(): array
     {
         if (!($this->date instanceof DateTime)) {
-            throw new \InvalidArgumentException('You need to set DATE to get historical information.');
+            throw new InvalidArgumentException('You need to set DATE to get historical information.');
         }
-        return $this->request('/historical/' . $this->date->format('Y-m-d') . '.json', [
+        return $this->request("/historical/{$this->date->format(self::DATE_FORMAT)}.json", [
             'base' => $this->base,
             'symbols' => $this->symbols,
         ]);
@@ -214,7 +215,7 @@ class client
     public function currencies(): array
     {
         return $this->request('/currencies.json', [
-            'prettyprint' => $this->prettyprint,
+            self::PRETTY_PRINT => $this->prettyprint,
             'show_alternative' => $this->show_alternative,
         ]);
     }
@@ -231,7 +232,7 @@ class client
             'end' => $this->end,
             'symbols' => $this->symbols,
             'base' => $this->base,
-            'prettyprint' => $this->prettyprint,
+            self::PRETTY_PRINT => $this->prettyprint,
         ]);
     }
 
@@ -243,20 +244,20 @@ class client
     public function convert(): array
     {
         if (!($this->from instanceof DateTime)) {
-            throw new \InvalidArgumentException('You need to set FROM date to convert money value from one currency to another.');
+            throw new InvalidArgumentException('You need to set FROM date to convert money value from one currency to another.');
         }
 
         if (!($this->to instanceof DateTime)) {
-            throw new \InvalidArgumentException('You need to set TO date to convert money value from one currency to another.');
+            throw new InvalidArgumentException('You need to set TO date to convert money value from one currency to another.');
         }
 
         if (!is_float($this->value)) {
-            throw new \InvalidArgumentException('You need to set VALUE to convert money value from one currency to another.');
+            throw new InvalidArgumentException('You need to set VALUE to convert money value from one currency to another.');
         }
 
 
-        return $this->request('/convert/' . strval($this->value) . '/' . $this->from->format('Y-m-d') . '/' . $this->to->format('Y-m-d'), [
-            'prettyprint' => $this->prettyprint,
+        return $this->request('/convert/' . (string) $this->value . '/' . $this->from->format(self::DATE_FORMAT) . '/' . $this->to->format(self::DATE_FORMAT), [
+            self::PRETTY_PRINT => $this->prettyprint,
         ]);
     }
 
@@ -268,7 +269,7 @@ class client
     public function usage(): array
     {
         return $this->request('/usage.json', [
-            'prettyprint' => $this->prettyprint,
+            self::PRETTY_PRINT => $this->prettyprint,
         ]);
     }
 
