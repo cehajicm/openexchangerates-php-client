@@ -5,6 +5,7 @@ on:
   pull_request:
     branches:
       - master
+name: SonarQube Scan
 jobs:
   sq_scan_job:
     runs-on: ubuntu-latest
@@ -14,14 +15,39 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Extract context
+        id: context
+        shell: bash
+        run: |
+          if [[ "${GITHUB_EVENT_NAME}" == "pushed" ]]; then
+            EVENT_ACTION=$(jq -r ".action" "${GITHUB_EVENT_PATH}")
+              if [[ "${EVENT_ACTION}" = "opened" ]]; then
+          		CURRENT_BRANCH = $(jq -r ".pullrequest.head.ref" "${GITHUB_EVENT_PATH}")
+          		CB = ${GITHUB_EVENT_PATH#pullrequest/head/ref}
+                echo "##[set-output name=current_branch;]${CURRENT_BRANCH}"
+                echo "##[set-output name=cb;]${CB}"
+            fi
+          fi
+
+          if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
+            EVENT_ACTION=$(jq -r ".action" "${GITHUB_EVENT_PATH}")
+              if [[ "${EVENT_ACTION}" = "opened" ]]; then
+          		PR_BRANCH = $(jq -r ".pullrequest.head.ref" "${GITHUB_EVENT_PATH}")
+          		PR_KEY = $(jq -r ".pullrequest.number" "${GITHUB_EVENT_PATH}")
+                echo "##[set-output name=pr_branch;]${PR_BRANCH}"
+                echo "##[set-output name=pr_key;]${PR_KEY}"
+            fi
+          fi
       - name: Setup sonarqube
         uses: warchant/setup-sonar-scanner@v1
       - name: Run sonarqube
         env:
           # to get access to secrets.SONAR_TOKEN, provide GITHUB_TOKEN
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: sonar-scanner
-          -Dsonar.projectKey=oxc
+        run: sonar-scanner -X
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-          -Dsonar.sources=.
-          -Dsonar.host.url=http://93.180.118.102:9000
+          -Dsonar.host.url=http://mc-h6yx.localhost.run
+          -Dsonar.scm.provider=git
+          -Dsonar.branch.name="${GITHUB_REF#refs/heads/}"
+          -Dsonar.pullrequest.branch="${GITHUB_EVENT_PATH#pullrequest/head/ref/}"
+          -Dsonar.pullrequest.key="${GITHUB_EVENT_PATH#pullrequest/number/}"
