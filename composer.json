@@ -9,7 +9,10 @@
       "email": "mirza.cehajic@gmail.com"
     }
   ],
-  "require": {},
+  "require": {
+    "ext-curl": "*",
+    "ext-json": "*"
+  },
   "require-dev": {
     "phpunit/phpunit": "^6.0"
   },
