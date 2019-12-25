@@ -41,15 +41,11 @@ jobs:
       - name: Setup sonarqube
         uses: warchant/setup-sonar-scanner@v1
       - name: Run sonarqube
-        shell: bash
         env:
           # to get access to secrets.SONAR_TOKEN, provide GITHUB_TOKEN
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-        sonar-scanner
-          -Dsonar.projectKey=oxc
+        run: sonar-scanner
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-          -Dsonar.sources=.
           -Dsonar.host.url=http://mc-h6yx.localhost.run
           -Dsonar.scm.provider=git
           -Dsonar.branch.name=${{ steps.context.outputs.cb }}
