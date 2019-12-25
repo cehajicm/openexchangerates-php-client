@@ -44,7 +44,7 @@ jobs:
         env:
           # to get access to secrets.SONAR_TOKEN, provide GITHUB_TOKEN
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: sonar-scanner
+        run: sonar-scanner -X
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
           -Dsonar.host.url=http://mc-h6yx.localhost.run
           -Dsonar.scm.provider=git
