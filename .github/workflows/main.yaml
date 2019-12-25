@@ -53,5 +53,4 @@ jobs:
           -Dsonar.host.url=http://mc-h6yx.localhost.run
           -Dsonar.scm.provider=git
           -Dsonar.branch.name=${{ steps.context.outputs.cb }}
-#          -Dsonar.pullrequest.branch=${{ steps.context.outputs.pr_branch }}
-#          -Dsonar.pullrequest.key=${{ steps.context.outputs.pr_key}}
+
