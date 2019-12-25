@@ -25,4 +25,3 @@ jobs:
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
           -Dsonar.sources=.
           -Dsonar.host.url=http://93.180.118.102:9000
-          -Dsonar.scm.provider=git
