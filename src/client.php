@@ -21,6 +21,7 @@ class client
     const ENDPOINT = 'https://openexchangerates.org/api';
     const DATE_FORMAT = 'Y-m-d';
     const PRETTY_PRINT = 'prettyprint';
+    const SYMBOLS = 'symbols';
 
     /**
      * API endpoint parameters.
@@ -159,7 +160,7 @@ class client
     {
         return $this->request('/latest.json', [
             'base' => $this->base,
-            'symbols' => $this->symbols,
+             self::SYMBOLS => $this->symbols,
         ]);
     }
 
@@ -203,7 +204,7 @@ class client
         }
         return $this->request("/historical/{$this->date->format(self::DATE_FORMAT)}.json", [
             'base' => $this->base,
-            'symbols' => $this->symbols,
+            self::SYMBOLS => $this->symbols,
         ]);
     }
 
@@ -230,7 +231,7 @@ class client
         return $this->request('/time-series.json', [
             'start' => $this->start,
             'end' => $this->end,
-            'symbols' => $this->symbols,
+            self::SYMBOLS => $this->symbols,
             'base' => $this->base,
             self::PRETTY_PRINT => $this->prettyprint,
         ]);
