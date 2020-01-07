@@ -12,4 +12,5 @@ Exchange rates published through the Open Exchange Rates API are collected from 
 * Time-Frame Queries
 * Currency-Change Queries
 
+
 Website: [openexchangerates.org](https://openexchangerates.org/)
