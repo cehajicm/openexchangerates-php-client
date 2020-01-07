@@ -1,10 +1,8 @@
 on:
   push:
-    branches:
-      - master
   pull_request:
-    branches:
-      - master
+    types: [opened]
+name: SonarQube Scan
 jobs:
   sq_scan_job:
     runs-on: ubuntu-latest
@@ -20,9 +18,21 @@ jobs:
         env:
           # to get access to secrets.SONAR_TOKEN, provide GITHUB_TOKEN
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: sonar-scanner
-          -Dsonar.projectKey=oxc
+        shell: bash
+        run:
+          if [ "$GITHUB_EVENT_NAME" = "push" ]; then
+          echo "$GITHUB_EVENT_NAME" &&
+          sonar-scanner
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-          -Dsonar.sources=.
-          -Dsonar.host.url=http://93.180.118.102:9000
+          -Dsonar.host.url=http://mc-wwmk.localhost.run
           -Dsonar.scm.provider=git
+          -Dsonar.branch.name=${GITHUB_REF#refs/heads/};
+          elif [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+          echo "$GITHUB_EVENT_NAME" &&
+          sonar-scanner
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+          -Dsonar.host.url=http://mc-dran.localhost.run
+          -Dsonar.scm.provider=git
+          -Dsonar.pullrequest.branch=$(jq -r ".pull_request.head.ref" ${GITHUB_EVENT_PATH})
+          -Dsonar.pullrequest.key=$(jq -r ".pull_request.number" ${GITHUB_EVENT_PATH});
+          fi
