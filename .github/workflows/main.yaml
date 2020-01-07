@@ -24,15 +24,16 @@ jobs:
             echo "$GITHUB_EVENT_NAME" &&
             sonar-scanner
               -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-              -Dsonar.host.url=http://mc-wwmk.localhost.run
+              -Dsonar.host.url=http://mc-v2vc.localhost.run
               -Dsonar.scm.provider=git
               -Dsonar.branch.name=${GITHUB_REF#refs/heads/};
           elif [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
             echo "$GITHUB_EVENT_NAME" &&
             sonar-scanner
               -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-              -Dsonar.host.url=http://mc-dran.localhost.run
+              -Dsonar.host.url=http://mc-v2vc.localhost.run
               -Dsonar.scm.provider=git
               -Dsonar.pullrequest.branch=$(jq -r ".pull_request.head.ref" ${GITHUB_EVENT_PATH})
-              -Dsonar.pullrequest.key=$(jq -r ".pull_request.number" ${GITHUB_EVENT_PATH});
+              -Dsonar.pullrequest.key=$(jq -r ".pull_request.number" ${GITHUB_EVENT_PATH})
+              -Dsonar.pullrequest.provider=Github;
           fi
