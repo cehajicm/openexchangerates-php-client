@@ -34,6 +34,6 @@ jobs:
               -Dsonar.host.url=http://mc-v2vc.localhost.run
               -Dsonar.scm.provider=git
               -Dsonar.pullrequest.branch=$(jq -r ".pull_request.head.ref" ${GITHUB_EVENT_PATH})
-              -Dsonar.pullrequest.key=$(jq -r ".pull_request.number" ${GITHUB_EVENT_PATH});
-              -Dsonar.pullrequest.provider=github
+              -Dsonar.pullrequest.key=$(jq -r ".pull_request.number" ${GITHUB_EVENT_PATH})
+              -Dsonar.pullrequest.provider=github;
           fi
